@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 零依赖：测试只用 node:test 与 node:zlib，不需要 install
+      - name: 单元测试
+        run: node --test
+
+      - name: 端到端自检（真造一个三帧文件再解）
+        shell: bash
+        run: |
+          node -e '
+            const { zstdCompressSync } = require("node:zlib");
+            const fs = require("node:fs");
+            const frames = [0,1,2].map(i =>
+              zstdCompressSync(Buffer.from(JSON.stringify({ frame: i, text: "hello 流萤" }) + "\n"))
+            );
+            fs.writeFileSync("demo.zst", Buffer.concat(frames));
+          '
+          node src/cli.js count demo.zst
+          node src/cli.js cat demo.zst
+
+      - name: 打包自检（bin 与 files 是否真的进包）
+        run: |
+          npm pack --dry-run 2>&1 | tee pack.log
+          node -e '
+            const t = require("node:fs").readFileSync("pack.log", "utf8");
+            const need = ["src/index.js", "src/cli.js", "README.md", "LICENSE"];
+            const missing = need.filter((f) => !t.includes(f));
+            if (missing.length) {
+              console.error("打包缺文件:", missing.join(", "));
+              process.exit(1);
+            }
+            console.log("打包内容完整:", need.length, "个必需文件");
+          '
