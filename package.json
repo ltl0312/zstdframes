@@ -1,12 +1,12 @@
 {
   "name": "zstdframes",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Stream multi-frame zstd files frame by frame, using Node's built-in zlib. Node's own zstd API silently reads only the first frame.",
   "type": "module",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "bin": {
-    "zstdframes": "./src/cli.js"
+    "zstdframes": "src/cli.js"
   },
   "exports": {
     ".": {
