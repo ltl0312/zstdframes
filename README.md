@@ -41,7 +41,7 @@ fs.createReadStream('session.v4.jsonl.zstd').pipe(z.createZstdDecompress())
 // → ZSTD_error_prefix_unknown
 ```
 
-> **Node version note.** The behaviour above is measured on Node 22.x and 24.12.0. Newer builds (24.22.2 confirmed) decode concatenated frames natively — `zstdDecompressSync` then returns every frame, so the silent-truncation symptom disappears on its own. What does not appear on any version is frame-level access: there is still no way to ask for the frame count, jump to frame *n*, or skip a frame without decoding it. That is what this package provides, and it is why `readFrames` works identically on 22.0 and 24.22.
+> **Node version note.** The behaviour above is measured on Node 22.x and 24.12.0. Newer builds (24.22.2 confirmed) decode concatenated frames natively — `zstdDecompressSync` then returns every frame, so the silent-truncation symptom disappears on its own. What does not appear on any version is frame-level access: there is still no way to ask for the frame count, jump to frame *n*, or skip a frame without decoding it. That is what this package provides, and it is why `readFrames` behaves identically on Node 22 and Node 24.22.
 
 Measured on a real 116 MiB log (23,913 frames → 587 MiB expanded), Node 24 / i9-13900HX:
 
