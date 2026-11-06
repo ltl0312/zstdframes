@@ -1,7 +1,7 @@
 {
   "name": "zstdframes",
   "version": "0.1.3",
-  "description": "Stream multi-frame zstd files frame by frame, using Node's built-in zlib. Node's own zstd API silently reads only the first frame.",
+  "description": "Frame-level access to multi-frame zstd files (agent session logs, container logs) with Node built-in zlib: count, seek, stream one frame at a time.",
   "type": "module",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",

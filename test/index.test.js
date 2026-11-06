@@ -8,10 +8,16 @@ function makeMultiFrame(parts) {
   return Buffer.concat(parts.map((p) => zstdCompressSync(Buffer.from(p, 'utf8'))))
 }
 
-test('Node 内置同步 API 在多帧文件上只返回第一帧（本包存在的原因）', () => {
+test('原生 API 对拼接帧的处理随 Node 版本变化（本包不依赖它）', () => {
   const buf = makeMultiFrame(['{"a":1}\n', '{"b":2}\n', '{"c":3}\n'])
   const native = zstdDecompressSync(buf).toString('utf8')
-  assert.equal(native, '{"a":1}\n')
+  // Node 22.x / 24.12：只解首帧（静默截断）；24.22+：连续解完所有帧
+  const firstOnly = '{"a":1}\n'
+  const allFrames = '{"a":1}\n{"b":2}\n{"c":3}\n'
+  assert.ok(
+    native === firstOnly || native === allFrames,
+    `原生行为出现第三种结果（${process.version}）：${JSON.stringify(native)}`,
+  )
 })
 
 test('findFrameStarts 找到全部帧头', () => {

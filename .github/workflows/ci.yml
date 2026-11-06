@@ -26,6 +26,17 @@ jobs:
       - name: 单元测试
         run: node --test
 
+      - name: 记录原生 zstd 对拼接帧的行为（仅记录，不断言）
+        shell: bash
+        run: |
+          node -e '
+            const { zstdCompressSync, zstdDecompressSync } = require("node:zlib");
+            const buf = Buffer.concat(["a","b","c"].map(s => zstdCompressSync(Buffer.from(s))));
+            const native = zstdDecompressSync(buf).toString();
+            const kind = native === "abc" ? "全部拼接帧" : native === "a" ? "仅首帧（静默截断）" : "未知:" + JSON.stringify(native);
+            console.log(`原生行为 node ${process.version}: ${kind}`);
+          '
+
       - name: 端到端自检（真造一个三帧文件再解）
         shell: bash
         run: |
