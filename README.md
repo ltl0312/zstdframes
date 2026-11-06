@@ -1,5 +1,9 @@
 # zstdframes
 
+[![CI](https://github.com/ltl0312/zstdframes/actions/workflows/ci.yml/badge.svg)](https://github.com/ltl0312/zstdframes/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/zstdframes.svg)](https://www.npmjs.com/package/zstdframes)
+[![node](https://img.shields.io/node/v/zstdframes.svg)](https://nodejs.org)
+
 Read multi-frame zstd files frame by frame, using Node's built-in `zlib`.
 
 **Node's own zstd API cannot read these files.** This library exists because of that.
