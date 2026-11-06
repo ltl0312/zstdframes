@@ -1,6 +1,6 @@
 {
   "name": "zstdframes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Stream multi-frame zstd files frame by frame, using Node's built-in zlib. Node's own zstd API silently reads only the first frame.",
   "type": "module",
   "main": "./src/index.js",
@@ -35,5 +35,14 @@
     "node": ">=22.15"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ltl0312/zstdframes.git"
+  },
+  "homepage": "https://github.com/ltl0312/zstdframes#readme",
+  "bugs": {
+    "url": "https://github.com/ltl0312/zstdframes/issues"
+  },
+  "author": "ltl0312"
 }
